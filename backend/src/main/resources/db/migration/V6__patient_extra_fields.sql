@@ -1,0 +1,4 @@
+ALTER TABLE patients
+    ADD COLUMN IF NOT EXISTS bed_number VARCHAR(20),
+    ADD COLUMN IF NOT EXISTS allergies TEXT,
+    ADD COLUMN IF NOT EXISTS observations TEXT;

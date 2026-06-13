@@ -1,0 +1,105 @@
+.app-sidebar {
+  width: 180px;
+  min-width: 180px;
+  background: var(--bg2);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 24px 0 20px;
+  border-right: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  flex-shrink: 0;
+}
+
+.app-sidebar-top { display: flex; flex-direction: column; }
+.app-sidebar-bottom { display: flex; flex-direction: column; }
+
+.app-sidebar-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 0 16px 16px;
+}
+
+.app-sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0 10px;
+}
+
+.app-sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 500;
+  color: #1e3a5f;
+  transition: background 0.15s;
+}
+.app-sidebar-item:hover { background: var(--bg3); }
+.app-sidebar-item.active {
+  background: #1e3a5f;
+  color: white;
+  font-weight: 700;
+}
+.app-sidebar-item.active .app-sidebar-icon { color: white; }
+.app-sidebar-icon {
+  display: flex;
+  align-items: center;
+  color: #1e3a5f;
+  flex-shrink: 0;
+}
+
+.app-sidebar-profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px;
+  font-size: 14px;
+  color: #1e3a5f;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 10px;
+  margin: 0 10px;
+  transition: background 0.15s;
+}
+.app-sidebar-profile:hover { background: var(--bg3); }
+.app-sidebar-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--bg3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1e3a5f;
+  flex-shrink: 0;
+}
+.app-sidebar-username {
+  font-size: 14px;
+  color: #1e3a5f;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Dark mode */
+body.dark .app-sidebar {
+  background: #090d13;
+  border-color: #2a3040;
+}
+body.dark .app-sidebar-divider { background: #2a3040; }
+body.dark .app-sidebar-item { color: #8b949e; }
+body.dark .app-sidebar-item:hover { background: #1e2430; color: #e6edf3; }
+body.dark .app-sidebar-item.active { background: #1e3a5f; color: #e6edf3; }
+body.dark .app-sidebar-item.active .app-sidebar-icon { color: #e6edf3; }
+body.dark .app-sidebar-icon { color: #8b949e; }
+body.dark .app-sidebar-avatar { background: #1e2430; color: #8b949e; }
+body.dark .app-sidebar-username { color: #e6edf3; }
+body.dark .app-sidebar-profile { color: #e6edf3; }

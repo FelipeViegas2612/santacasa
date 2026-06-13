@@ -1,0 +1,8 @@
+-- Restore rich medication fields removed in V7
+ALTER TABLE medications ADD COLUMN IF NOT EXISTS active_ingredient VARCHAR(255);
+ALTER TABLE medications ADD COLUMN IF NOT EXISTS concentration VARCHAR(100);
+ALTER TABLE medications ADD COLUMN IF NOT EXISTS form VARCHAR(100);
+ALTER TABLE medications ADD COLUMN IF NOT EXISTS route VARCHAR(100);
+ALTER TABLE medications ADD COLUMN IF NOT EXISTS manufacturer VARCHAR(255);
+ALTER TABLE medications ADD COLUMN IF NOT EXISTS lot VARCHAR(100);
+ALTER TABLE medications ADD COLUMN IF NOT EXISTS observation TEXT;

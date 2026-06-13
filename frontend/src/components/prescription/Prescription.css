@@ -1,0 +1,194 @@
+body { margin: 0; font-family: "Poppins", Arial, sans-serif; }
+
+.presc-container { min-height: 100vh; background: var(--bg); }
+
+.presc-topbar {
+  height: 60px; background: #1e3a5f; color: white;
+  display: flex; align-items: center; padding: 0 20px; gap: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15); position: sticky; top: 0; z-index: 100;
+}
+.back-btn { font-size: 14px; color: white; cursor: pointer; font-weight: 600; white-space: nowrap; opacity: 0.85; }
+.back-btn:hover { opacity: 1; }
+.tab-bar { display: flex; gap: 4px; flex: 1; justify-content: center; }
+.tab { background: rgba(255,255,255,0.1); color: white; border: none; border-radius: 8px; padding: 7px 14px; cursor: pointer; font-size: 13px; font-weight: 500; transition: 0.2s; }
+.tab:hover { background: rgba(255,255,255,0.2); }
+.tab.active { background: white; color: #1e3a5f; font-weight: 700; }
+.print-btn { background: rgba(255,255,255,0.15); color: white; border: none; border-radius: 8px; padding: 7px 14px; cursor: pointer; font-size: 13px; }
+
+.presc-content { padding: 24px; max-width: 1200px; margin: 0 auto; }
+.loading { text-align: center; padding: 60px; color: #666; }
+.empty { color: #888; text-align: center; padding: 20px; }
+.empty-sm { color: #aaa; font-size: 13px; padding: 8px 0; }
+
+/* No prescription */
+.no-presc-card { background: var(--bg2); border-radius: 20px; padding: 32px; max-width: 600px; margin: 0 auto; box-shadow: var(--card-shadow); border: 1px solid var(--border); }
+.no-presc-card h3 { color: #1e3a5f; margin-bottom: 20px; }
+.presc-form { display: flex; flex-direction: column; gap: 14px; }
+.presc-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.presc-field { display: flex; flex-direction: column; }
+.presc-field label { font-size: 13px; font-weight: 600; color: var(--text2); margin-bottom: 6px; }
+.presc-field input, .presc-field textarea {
+  padding: 10px 14px; border: 1px solid var(--border); border-radius: 10px;
+  font-size: 14px; outline: none; font-family: inherit;
+  background: var(--input-bg); color: var(--text);
+}
+.presc-field textarea { resize: vertical; }
+
+/* Header info */
+.presc-header-info { display: flex; gap: 16px; align-items: center; margin-bottom: 20px; flex-wrap: wrap; font-size: 14px; color: #555; }
+.valid-badge { background: #e8f5e9; color: #2e7d32; padding: 4px 12px; border-radius: 20px; font-weight: 600; font-size: 13px; }
+
+/* Daily table */
+.daily-view {}
+.daily-table { background: var(--bg2); border-radius: 16px; overflow: hidden; box-shadow: var(--card-shadow); border: 1px solid var(--border); }
+.daily-header { display: grid; grid-template-columns: 2.5fr 1fr 1fr 1fr 1fr 1fr 1.5fr; padding: 12px 16px; background: #1e3a5f; color: white; font-size: 12px; font-weight: 600; }
+.daily-row { display: grid; grid-template-columns: 2.5fr 1fr 1fr 1fr 1fr 1fr 1.5fr; padding: 12px 16px; border-bottom: 1px solid var(--border); align-items: start; font-size: 13px; color: var(--text2); }
+.daily-row.type-medication { border-left: 4px solid #1565c0; }
+.daily-row.type-diet { border-left: 4px solid #2e7d32; }
+.daily-row.type-care { border-left: 4px solid #f57f17; }
+.item-name-col { display: flex; flex-direction: column; gap: 3px; }
+.obs { font-size: 11px; color: #e65100; font-weight: 500; }
+.type-badge { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 10px; display: inline-block; text-transform: uppercase; width: fit-content; }
+.type-badge.medication { background: #e3f2fd; color: #1565c0; }
+.type-badge.diet { background: #e8f5e9; color: #2e7d32; }
+.type-badge.care { background: #fff8e1; color: #f57f17; }
+.administer-col { display: flex; flex-wrap: wrap; gap: 4px; }
+.adm-btn {
+  position: relative;
+  background: #e3f2fd; color: #1565c0;
+  border: 1px solid #90caf9; border-radius: 8px;
+  padding: 8px 12px; cursor: pointer;
+  font-size: 12px; font-weight: 600;
+  transition: 0.2s; min-width: 52px; min-height: 44px;
+  text-align: center; display: inline-flex;
+  align-items: center; justify-content: center;
+}
+.adm-btn:not(.done):hover { background: #1565c0; color: white; }
+.adm-btn.done { background: #e8f5e9; color: #2e7d32; border-color: #a5d6a7; cursor: pointer; }
+.adm-btn.done:hover { background: #ffebee; color: #c62828; border-color: #ef9a9a; }
+.adm-label-normal { display: inline; }
+.adm-label-hover { display: none; }
+.adm-btn.done:hover .adm-label-normal { display: none; }
+.adm-btn.done:hover .adm-label-hover { display: inline; white-space: nowrap; }
+
+/* Prescription edit */
+.presc-edit-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; font-size: 14px; color: #555; }
+.presc-notes { color: #888; font-size: 13px; margin-top: 4px; }
+.add-btn { background: #1e3a5f; color: white; border: none; border-radius: 10px; padding: 9px 18px; cursor: pointer; font-weight: 600; font-size: 13px; }
+.save-btn { background: #1e3a5f; color: white; border: none; border-radius: 10px; padding: 10px 24px; cursor: pointer; font-weight: 700; font-size: 14px; }
+.cancel-btn { background: #eee; color: #333; border: none; border-radius: 10px; padding: 10px 18px; cursor: pointer; font-size: 14px; }
+
+.items-list { display: flex; flex-direction: column; gap: 8px; }
+.presc-item { background: var(--bg2); border-radius: 12px; padding: 14px 18px; border-left: 4px solid #ccc; box-shadow: var(--card-shadow); border-top: 1px solid var(--border); border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.presc-item.type-medication { border-left-color: #1565c0; }
+.presc-item.type-diet { border-left-color: #2e7d32; }
+.presc-item.type-care { border-left-color: #f57f17; }
+.presc-item-main { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+.presc-item-name { font-weight: 600; color: var(--text); font-size: 14px; }
+.presc-item-details { display: flex; flex-wrap: wrap; gap: 12px; font-size: 13px; color: var(--text2); margin-bottom: 8px; }
+.obs-detail { color: #e65100; font-weight: 500; }
+.presc-item-actions { display: flex; gap: 8px; }
+.edit-sm { background: #e8edf5; color: #1e3a5f; border: none; border-radius: 8px; padding: 5px 12px; cursor: pointer; font-size: 12px; font-weight: 600; }
+.del-sm { background: #fdecea; color: #c62828; border: none; border-radius: 8px; padding: 5px 12px; cursor: pointer; font-size: 12px; }
+
+/* Item form */
+.item-form { background: var(--bg3); border: 1px solid var(--border); border-radius: 14px; padding: 20px; margin-bottom: 16px; }
+.item-form h4 { color: var(--text); margin: 0 0 14px; }
+.item-form-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+.if-field { display: flex; flex-direction: column; }
+.if-field.full { grid-column: 1 / -1; }
+.if-field label { font-size: 12px; font-weight: 600; color: var(--text2); margin-bottom: 5px; }
+.if-field input, .if-field select {
+  padding: 9px 12px; border: 1px solid var(--border); border-radius: 8px;
+  font-size: 13px; outline: none; background: var(--bg2); color: var(--text); font-family: inherit;
+}
+.if-field input:focus, .if-field select:focus { border-color: #1e3a5f; }
+.if-actions { display: flex; gap: 10px; margin-top: 14px; }
+
+/* History */
+.history-view { display: flex; flex-direction: column; gap: 10px; }
+.history-item-block { background: var(--bg2); border-radius: 12px; overflow: hidden; box-shadow: var(--card-shadow); border: 1px solid var(--border); }
+.history-item-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; cursor: pointer; }
+.history-item-header:hover { background: var(--bg3); }
+.expand-hint { font-size: 12px; color: #aaa; }
+.history-detail { padding: 0 18px 16px; border-top: 1px solid var(--border); }
+.history-detail h4 { color: var(--text); font-size: 13px; margin: 14px 0 8px; }
+.history-entry { display: flex; gap: 10px; align-items: center; font-size: 13px; color: var(--text2); padding: 5px 0; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+.hist-field { font-weight: 600; color: var(--text); min-width: 100px; }
+.hist-old { color: #c62828; text-decoration: line-through; }
+.hist-new { color: #2e7d32; font-weight: 600; }
+.hist-by { color: #aaa; font-size: 11px; margin-left: auto; }
+
+/* Print */
+@media print {
+  .presc-topbar, .tab-bar, .print-btn, .presc-item-actions { display: none !important; }
+  .presc-container { background: white; }
+  .presc-content { padding: 0; max-width: 100%; }
+  .daily-table { box-shadow: none; border: 1px solid #ccc; }
+  .daily-header {
+    background: #1e3a5f !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    grid-template-columns: 2.5fr 1fr 1fr 0.8fr 0.8fr 0.8fr 1.2fr !important;
+  }
+  .daily-row {
+    grid-template-columns: 2.5fr 1fr 1fr 0.8fr 0.8fr 0.8fr 1.2fr !important;
+    page-break-inside: avoid;
+    border-bottom: 1px solid #eee;
+  }
+  .administer-col { display: flex !important; }
+  .adm-btn { display: none !important; }
+  .presc-header-info { margin-bottom: 12px; font-size: 13px; }
+}
+
+@media (max-width: 900px) {
+  /* tabela diária: esconde colunas de tarde/noite, mantém item/freq/qty/manhã/administrar */
+  .daily-header, .daily-row {
+    grid-template-columns: 2fr 1fr 1fr 1.2fr 1.8fr;
+  }
+  .daily-header span:nth-child(5), .daily-row span:nth-child(5),
+  .daily-header span:nth-child(6), .daily-row span:nth-child(6) { display: none; }
+
+  /* form de item em 2 colunas */
+  .item-form-grid { grid-template-columns: 1fr 1fr; }
+
+  /* topbar: tabs quebram para baixo */
+  .presc-topbar {
+    flex-wrap: wrap;
+    height: auto;
+    padding: 10px 16px;
+    gap: 10px;
+  }
+  .tab-bar { width: 100%; justify-content: flex-start; order: 3; }
+  .tab { font-size: 12px; padding: 8px 12px; min-height: 40px; }
+  .print-btn { min-height: 40px; padding: 8px 14px; }
+
+  /* form de nova prescrição: campos lado a lado no tablet */
+  .presc-form-row { grid-template-columns: 1fr 1fr; }
+
+  /* inputs com altura mínima touch */
+  .presc-field input,
+  .presc-field textarea,
+  .if-field input,
+  .if-field select { min-height: 44px; }
+
+  .presc-content { padding: 16px; }
+}
+
+@media (max-width: 600px) {
+  /* tabela diária: apenas item + administrar */
+  .daily-header, .daily-row {
+    grid-template-columns: 2fr 1.6fr;
+  }
+  .daily-header span:nth-child(2), .daily-row span:nth-child(2),
+  .daily-header span:nth-child(3), .daily-row span:nth-child(3),
+  .daily-header span:nth-child(4), .daily-row span:nth-child(4) { display: none; }
+
+  /* form nova prescrição: empilha */
+  .presc-form-row { grid-template-columns: 1fr; }
+
+  /* form de item: coluna única */
+  .item-form-grid { grid-template-columns: 1fr; }
+
+  .presc-edit-header { flex-direction: column; gap: 12px; align-items: flex-start; }
+}
