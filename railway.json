@@ -1,6 +1,6 @@
 {
   "build": {
-    "buildCommand": "./gradlew build -x test",
+    "buildCommand": "sh gradlew build -x test",
     "watchPatterns": [
       "backend/**"
     ]
