@@ -1,0 +1,2 @@
+-- Baseline migration: tables were created in V2 and V3.
+-- This file exists so Flyway has a valid starting point on fresh deployments.
