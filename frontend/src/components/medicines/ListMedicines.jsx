@@ -262,7 +262,6 @@ export default function ListMedicines() {
                   </th>
                   <th>Medicamento</th>
                   <th>Dosagem</th>
-                  <th>Frequência</th>
                   <th>Horários</th>
                   <th>Estoque</th>
                   <th>Ações</th>
@@ -270,9 +269,9 @@ export default function ListMedicines() {
               </thead>
               <tbody>
                 {loading ? (
-                  <tr><td colSpan={7} className="med-td-empty">Carregando...</td></tr>
+                  <tr><td colSpan={6} className="med-td-empty">Carregando...</td></tr>
                 ) : paginated.length === 0 ? (
-                  <tr><td colSpan={7} className="med-td-empty">Nenhum medicamento encontrado.</td></tr>
+                  <tr><td colSpan={6} className="med-td-empty">Nenhum medicamento encontrado.</td></tr>
                 ) : paginated.map((m) => {
                   const stockLow = (m.stock ?? 0) < (m.minStock ?? 0);
                   const times = timesByMed[m.id] || [];
@@ -284,7 +283,6 @@ export default function ListMedicines() {
                       </td>
                       <td className="med-td-name">{m.name}</td>
                       <td>{m.concentration || m.unit || "—"}</td>
-                      <td>{m.category || "—"}</td>
                       <td>
                         <div className="med-times">
                           {times.length > 0

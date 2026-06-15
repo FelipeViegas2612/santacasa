@@ -105,6 +105,21 @@ body { margin: 0; font-family: "Poppins", Arial, sans-serif; }
 .if-field input:focus, .if-field select:focus { border-color: #1e3a5f; }
 .if-actions { display: flex; gap: 10px; margin-top: 14px; }
 
+/* Autocomplete */
+.autocomplete-wrap { position: relative; }
+.autocomplete-list {
+  position: absolute; top: 100%; left: 0; right: 0; z-index: 200;
+  background: var(--bg2); border: 1px solid var(--border); border-top: none;
+  border-radius: 0 0 8px 8px; max-height: 200px; overflow-y: auto;
+  list-style: none; margin: 0; padding: 0; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+.autocomplete-list li {
+  padding: 10px 12px; font-size: 13px; cursor: pointer;
+  color: var(--text); transition: background 0.15s;
+}
+.autocomplete-list li:hover,
+.autocomplete-list li.active { background: #e3f2fd; color: #1565c0; }
+
 /* History */
 .history-view { display: flex; flex-direction: column; gap: 10px; }
 .history-item-block { background: var(--bg2); border-radius: 12px; overflow: hidden; box-shadow: var(--card-shadow); border: 1px solid var(--border); }

@@ -325,10 +325,77 @@ export default function PrescriptionPage() {
   );
 }
 
-const emptyItem = { itemType: "MEDICATION", name: "", frequency: "", quantity: "", morningTimes: "", afternoonTimes: "", nightTimes: "", observation: "", sortOrder: 0 };
+const emptyItem = { itemType: "MEDICATION", name: "", frequency: "", quantity: "", morningTimes: "", afternoonTimes: "", nightTimes: "", observation: "", sortOrder: 0, medicationId: null };
 
 function ItemForm({ initial, onSave, onCancel }) {
   const [form, setForm] = useState(initial ? { ...initial } : { ...emptyItem });
+  const [suggestions, setSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [activeSuggestion, setActiveSuggestion] = useState(-1);
+  const debounceRef = useRef(null);
+  const wrapperRef = useRef(null);
+
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (wrapperRef.current && !wrapperRef.current.contains(e.target)) {
+        setShowSuggestions(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  async function searchMedications(query) {
+    if (!query || query.trim().length === 0) {
+      try {
+        const { data } = await api.get("/medications");
+        setSuggestions(data || []);
+        setShowSuggestions((data || []).length > 0);
+        setActiveSuggestion(-1);
+      } catch {
+        setSuggestions([]);
+      }
+      return;
+    }
+    try {
+      const { data } = await api.get("/medications", { params: { search: query } });
+      setSuggestions(data || []);
+      setShowSuggestions((data || []).length > 0);
+      setActiveSuggestion(-1);
+    } catch {
+      setSuggestions([]);
+    }
+  }
+
+  function handleNameChange(e) {
+    const value = e.target.value;
+    setForm((prev) => ({ ...prev, name: value, medicationId: null }));
+    clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => searchMedications(value), 300);
+  }
+
+  function selectSuggestion(med) {
+    setForm((prev) => ({ ...prev, name: med.name, medicationId: med.id }));
+    setShowSuggestions(false);
+    setSuggestions([]);
+  }
+
+  function handleNameKeyDown(e) {
+    if (!showSuggestions || suggestions.length === 0) return;
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setActiveSuggestion((prev) => (prev < suggestions.length - 1 ? prev + 1 : 0));
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setActiveSuggestion((prev) => (prev > 0 ? prev - 1 : suggestions.length - 1));
+    } else if (e.key === "Enter" && activeSuggestion >= 0) {
+      e.preventDefault();
+      selectSuggestion(suggestions[activeSuggestion]);
+    } else if (e.key === "Escape") {
+      setShowSuggestions(false);
+    }
+  }
+
   const f = (field) => ({ value: form[field] || "", onChange: (e) => setForm({ ...form, [field]: e.target.value }) });
 
   return (
@@ -343,9 +410,29 @@ function ItemForm({ initial, onSave, onCancel }) {
             <option value="CARE">Cuidado</option>
           </select>
         </div>
-        <div className="if-field full">
+        <div className="if-field full autocomplete-wrap" ref={wrapperRef}>
           <label>Nome *</label>
-          <input {...f("name")} required placeholder="Ex: Baclofeno 10mg" />
+          <input
+            value={form.name || ""}
+            onChange={handleNameChange}
+            onKeyDown={handleNameKeyDown}
+            onFocus={() => searchMedications(form.name || "")}
+            required
+            placeholder="Ex: Baclofeno 10mg"
+          />
+          {showSuggestions && (
+            <ul className="autocomplete-list">
+              {suggestions.map((med, i) => (
+                <li
+                  key={med.id}
+                  className={i === activeSuggestion ? "active" : ""}
+                  onMouseDown={() => selectSuggestion(med)}
+                >
+                  {med.name}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
         <div className="if-field">
           <label>Frequência</label>
