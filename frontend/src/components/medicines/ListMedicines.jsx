@@ -125,6 +125,27 @@ export default function ListMedicines() {
     }
   }
 
+  function handleExport() {
+    const headers = ["Medicamento", "Dosagem", "Categoria", "Horários", "Estoque", "Estoque Mínimo", "Validade"];
+    const rows = filtered.map((m) => [
+      m.name,
+      m.concentration || m.unit || "",
+      m.category || "",
+      (timesByMed[m.id] || []).join("; "),
+      m.stock ?? 0,
+      m.minStock ?? 0,
+      m.expiresAt || "",
+    ]);
+    const csv = [headers.join(","), ...rows.map((r) => r.map((c) => `"${c}"`).join(","))].join("\n");
+    const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "medicamentos.csv";
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
   function handlePageChange(p) {
     if (p >= 1 && p <= totalPages) setPage(p);
   }
@@ -226,7 +247,7 @@ export default function ListMedicines() {
             <span className="med-showing">
               Mostrando: {filtered.length === 0 ? 0 : (page - 1) * pageSize + 1}–{Math.min(page * pageSize, filtered.length)} de {filtered.length}
             </span>
-            <button className="med-export-btn">
+            <button className="med-export-btn" onClick={handleExport}>
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
               Exportar
             </button>
