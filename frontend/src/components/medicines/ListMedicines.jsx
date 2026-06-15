@@ -22,6 +22,7 @@ function isExpired(dateStr) {
 export default function ListMedicines() {
   const [medicines, setMedicines] = useState([]);
   const [linkedCountByMed, setLinkedCountByMed] = useState({});
+  const [timesByMed, setTimesByMed] = useState({});
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [filterCategory, setFilterCategory] = useState("");
@@ -48,6 +49,25 @@ export default function ListMedicines() {
         const map = {};
         counts.forEach(({ id, count }) => { map[id] = count; });
         if (alive) setLinkedCountByMed(map);
+
+        const itemRes = await Promise.all(
+          (meds || []).map((m) =>
+            api.get(`/medications/${m.id}/items`)
+              .then((r) => ({ id: m.id, items: r.data || [] }))
+              .catch(() => ({ id: m.id, items: [] }))
+          )
+        );
+        const timesMap = {};
+        itemRes.forEach(({ id, items }) => {
+          const allTimes = new Set();
+          items.forEach((item) => {
+            [item.morningTimes, item.afternoonTimes, item.nightTimes].forEach((t) => {
+              if (t) t.split(/[,/]/).map((x) => x.trim()).filter(Boolean).forEach((time) => allTimes.add(time));
+            });
+          });
+          timesMap[id] = [...allTimes].sort();
+        });
+        if (alive) setTimesByMed(timesMap);
       } finally {
         if (alive) setLoading(false);
       }
@@ -234,9 +254,7 @@ export default function ListMedicines() {
                   <tr><td colSpan={7} className="med-td-empty">Nenhum medicamento encontrado.</td></tr>
                 ) : paginated.map((m) => {
                   const stockLow = (m.stock ?? 0) < (m.minStock ?? 0);
-                  const times = [m.morningTimes, m.afternoonTimes, m.nightTimes]
-                    .flatMap(t => t ? t.split("/").map(x => x.trim()) : [])
-                    .filter(Boolean);
+                  const times = timesByMed[m.id] || [];
 
                   return (
                     <tr key={m.id} className={selected.has(m.id) ? "med-tr selected" : "med-tr"}>

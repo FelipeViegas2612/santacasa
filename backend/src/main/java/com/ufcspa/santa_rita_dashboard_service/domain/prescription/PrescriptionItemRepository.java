@@ -10,4 +10,6 @@ public interface PrescriptionItemRepository extends JpaRepository<PrescriptionIt
 
     @Query("SELECT DISTINCT p.patientId FROM PrescriptionItem pi JOIN Prescription p ON pi.prescriptionId = p.id WHERE pi.medicationId = :medId")
     List<Long> findDistinctPatientIdsByMedicationId(@Param("medId") Long medId);
+
+    List<PrescriptionItem> findByMedicationId(Long medicationId);
 }

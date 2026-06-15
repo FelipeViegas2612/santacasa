@@ -2,6 +2,7 @@ package com.ufcspa.santa_rita_dashboard_service.domain.medication;
 
 import com.ufcspa.santa_rita_dashboard_service.domain.patient.Patient;
 import com.ufcspa.santa_rita_dashboard_service.domain.patient.PatientRepository;
+import com.ufcspa.santa_rita_dashboard_service.domain.prescription.PrescriptionItem;
 import com.ufcspa.santa_rita_dashboard_service.domain.prescription.PrescriptionItemRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -78,5 +79,11 @@ public class MedicationController {
         List<Long> patientIds = prescriptionItemRepository.findDistinctPatientIdsByMedicationId(id);
         if (patientIds.isEmpty()) return ResponseEntity.ok(List.of());
         return ResponseEntity.ok(patientRepository.findAllById(patientIds));
+    }
+
+    @GetMapping("/{id}/items")
+    public ResponseEntity<List<PrescriptionItem>> getItems(@PathVariable Long id) {
+        if (!medicationRepository.existsById(id)) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(prescriptionItemRepository.findByMedicationId(id));
     }
 }
