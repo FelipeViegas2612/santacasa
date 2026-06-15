@@ -187,7 +187,7 @@ export default function PrescriptionPage() {
             {items.length === 0 && <p className="empty">Nenhum item na prescrição.</p>}
             <div className="daily-table">
               <div className="daily-header">
-                <span>Item</span><span>Frequência</span><span>Quantidade</span>
+                <span>Item</span><span>Quantidade</span>
                 <span>Manhã</span><span>Tarde</span><span>Noite</span><span>Administrar</span>
               </div>
               {items.map((item) => {
