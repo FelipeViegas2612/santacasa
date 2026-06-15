@@ -112,6 +112,33 @@ export default function RoomDailyView() {
     return () => clearInterval(t);
   }, []);
 
+  useEffect(() => {
+    const today = new Date().toDateString();
+    const allItems = daily.flatMap(({ items }) => items || []);
+    if (allItems.length === 0) return;
+    let alive = true;
+    (async () => {
+      const results = await Promise.allSettled(
+        allItems.map(item =>
+          api.get(`/prescription-items/${item.id}/administration-logs`).then(({ data }) => ({ item, logs: data }))
+        )
+      );
+      if (!alive) return;
+      const next = {};
+      results.forEach(r => {
+        if (r.status !== "fulfilled") return;
+        const { item, logs } = r.value;
+        logs.forEach(log => {
+          if (new Date(log.administeredAt).toDateString() === today) {
+            next[`${item.id}-${log.scheduledTime}`] = true;
+          }
+        });
+      });
+      setAdministered(prev => ({ ...prev, ...next }));
+    })();
+    return () => { alive = false; };
+  }, [daily]);
+
   async function handleAdminister(itemId, time) {
     const key = `${itemId}-${time}`;
     alertedKeys.current.delete(key);
@@ -291,7 +318,7 @@ export default function RoomDailyView() {
                     });
                   });
                   allSlots.sort((a, b) => a.time.localeCompare(b.time));
-                  const next = allSlots[0] || null;
+                  const next = allSlots.find(s => diffMinutes(s.time, currentTime) >= -10) || null;
 
                   const diff = next ? diffMinutes(next.time, currentTime) : null;
                   const isUrgent = diff !== null && diff >= -10 && diff <= 15;

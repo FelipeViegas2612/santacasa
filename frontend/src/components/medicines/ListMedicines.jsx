@@ -283,7 +283,7 @@ export default function ListMedicines() {
                         <input type="checkbox" checked={selected.has(m.id)} onChange={() => toggleSelect(m.id)} />
                       </td>
                       <td className="med-td-name">{m.name}</td>
-                      <td>{m.unit || "—"}</td>
+                      <td>{m.concentration || m.unit || "—"}</td>
                       <td>{m.category || "—"}</td>
                       <td>
                         <div className="med-times">

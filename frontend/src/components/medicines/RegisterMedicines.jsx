@@ -6,7 +6,7 @@ import "./Medicines.css";
 
 const FORM_OPTIONS = ["Comprimido", "Cápsula", "Xarope", "Solução", "Pomada", "Injetável", "Supositório", "Outro"];
 const ROUTE_OPTIONS = ["Oral", "Intravenosa", "Intramuscular", "Subcutânea", "Tópica", "Sublingual", "Retal", "Outro"];
-const UNIT_OPTIONS = ["0","1","2","5","10","20","30","50","100","200","500"];
+const STOCK_OPTIONS = ["0","1","2","5","10","20","30","50","100","200","500"];
 
 const empty = {
   name: "",
@@ -190,7 +190,7 @@ export default function RegisterMedicines() {
                 <label>Unidade:</label>
                 <select {...f("unit")}>
                   <option value="">Selecionar</option>
-                  {["Comprimido","Cápsula","Frasco","Ampola","Sachê","ml","mg","g","UI","Outro"].map(o => (
+                  {["mg","ml","g","UI","Gotas","mcg","Outro"].map(o => (
                     <option key={o} value={o}>{o}</option>
                   ))}
                 </select>
