@@ -237,7 +237,7 @@ function AgendaTimeline({ items, patientId }) {
     const today = new Date().toDateString();
     items.forEach(async (item) => {
       try {
-        const { data: logs } = await api.get(`/prescription-items/${item.id}/logs`);
+        const { data: logs } = await api.get(`/prescription-items/${item.id}/administration-logs`);
         logs.forEach(log => {
           if (new Date(log.administeredAt).toDateString() === today) {
             setAdministered(prev => ({ ...prev, [`${item.id}-${log.scheduledTime}`]: true }));
@@ -250,7 +250,7 @@ function AgendaTimeline({ items, patientId }) {
   async function handleAdminister(itemId, time) {
     const key = `${itemId}-${time}`;
     try {
-      await api.post(`/prescription-items/${itemId}/administer`, { scheduledTime: time });
+      await api.post(`/administration-logs`, { prescriptionItemId: itemId, scheduledTime: time });
       setAdministered(prev => ({ ...prev, [key]: true }));
     } catch { alert("Erro ao registrar."); }
   }

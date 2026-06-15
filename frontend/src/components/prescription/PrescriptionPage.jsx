@@ -51,7 +51,7 @@ export default function PrescriptionPage() {
       const today = new Date().toDateString();
       const adminMap = {};
       await Promise.all(itemList.map(async (item) => {
-        const { data: itemLogs } = await api.get(`/prescription-items/${item.id}/logs`);
+        const { data: itemLogs } = await api.get(`/prescription-items/${item.id}/administration-logs`);
         itemLogs.forEach((log) => {
           if (new Date(log.administeredAt).toDateString() === today) {
             adminMap[`${item.id}-${log.scheduledTime}`] = true;
@@ -88,13 +88,15 @@ export default function PrescriptionPage() {
 
   async function handleAdminister(item, time) {
     const key = `${item.id}-${time}`;
-    await api.post(`/prescription-items/${item.id}/administer`, { scheduledTime: time });
+    await api.post(`/administration-logs`, { prescriptionItemId: item.id, scheduledTime: time });
     setAdministered((prev) => ({ ...prev, [key]: true }));
   }
 
   async function handleUndo(item, time) {
     const key = `${item.id}-${time}`;
-    await api.delete(`/prescription-items/${item.id}/administer`, { params: { scheduledTime: time } });
+    const { data: logs } = await api.get(`/prescription-items/${item.id}/administration-logs`);
+    const log = logs.find(l => l.scheduledTime === time);
+    if (log) await api.delete(`/administration-logs/${log.id}`);
     setAdministered((prev) => ({ ...prev, [key]: false }));
   }
 
@@ -104,7 +106,7 @@ export default function PrescriptionPage() {
   }
 
   async function loadLogs(itemId) {
-    const { data } = await api.get(`/prescription-items/${itemId}/logs`);
+    const { data } = await api.get(`/prescription-items/${itemId}/administration-logs`);
     setLogs((prev) => ({ ...prev, [itemId]: data }));
   }
 

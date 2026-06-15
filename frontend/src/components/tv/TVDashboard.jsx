@@ -47,30 +47,37 @@ export default function TVDashboard() {
   const currentMin = toMinutes(currentHHMM);
 
   async function load() {
-    const { data: roomList } = await api.get("/rooms");
-    setRooms(roomList);
-    const map = {};
-    const today = new Date().toDateString();
-    const adminMap = {};
+    try {
+      const { data: roomList } = await api.get("/rooms");
+      setRooms(roomList);
+      const map = {};
+      const today = new Date().toDateString();
+      const adminMap = {};
 
-    await Promise.all(roomList.map(async (r) => {
-      const { data } = await api.get(`/rooms/${r.id}/daily`);
-      map[r.id] = data;
-      // Carrega logs de hoje para cada item
-      await Promise.all((data || []).flatMap(({ items }) =>
-        (items || []).map(async (item) => {
-          const { data: itemLogs } = await api.get(`/prescription-items/${item.id}/logs`);
-          itemLogs.forEach((log) => {
-            if (new Date(log.administeredAt).toDateString() === today) {
-              adminMap[`${item.id}-${log.scheduledTime}`] = true;
+      await Promise.all(roomList.map(async (r) => {
+        const { data } = await api.get(`/rooms/${r.id}/daily`);
+        map[r.id] = data;
+        await Promise.all((data || []).flatMap(({ items }) =>
+          (items || []).map(async (item) => {
+            try {
+              const { data: itemLogs } = await api.get(`/prescription-items/${item.id}/administration-logs`);
+              itemLogs.forEach((log) => {
+                if (new Date(log.administeredAt).toDateString() === today) {
+                  adminMap[`${item.id}-${log.scheduledTime}`] = true;
+                }
+              });
+            } catch (e) {
+              // ignora erro ao carregar logs de um item específico
             }
-          });
-        })
-      ));
-    }));
+          })
+        ));
+      }));
 
-    setDailyByRoom(map);
-    setAdministered(prev => ({ ...prev, ...adminMap }));
+      setDailyByRoom(map);
+      setAdministered(prev => ({ ...prev, ...adminMap }));
+    } catch (e) {
+      // ignora erro no carregamento inicial, o próximo refresh tentará novamente
+    }
   }
 
   useEffect(() => {
@@ -81,7 +88,7 @@ export default function TVDashboard() {
 
   async function handleAdminister(itemId, time) {
     const key = `${itemId}-${time}`;
-    await api.post(`/prescription-items/${itemId}/administer`, { scheduledTime: time });
+    await api.post(`/administration-logs`, { prescriptionItemId: itemId, scheduledTime: time });
     setAdministered(prev => ({ ...prev, [key]: true }));
   }
 
